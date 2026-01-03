@@ -8,14 +8,16 @@ const app = express();
 // Middleware
 const allowedOrigins = [
   'http://localhost:3000',
-  'http://localhost:5000',
   'https://coll-edge-connect.vercel.app',
-  process.env.FRONTEND_URL || 'http://localhost:3000'
-];
+  process.env.FRONTEND_URL
+].filter(Boolean);
 
 app.use(cors({
   origin: function(origin, callback) {
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
@@ -44,4 +46,3 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-
