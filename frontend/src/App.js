@@ -4,6 +4,8 @@ import ContactList from './components/ContactList';
 import Toast from './components/Toast';
 import './App.css';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+
 function App() {
   const [contacts, setContacts] = useState([]);
   const [editingContact, setEditingContact] = useState(null);
@@ -23,7 +25,7 @@ function App() {
   const fetchContacts = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('http://localhost:5000/api/contacts');
+      const response = await fetch(`${API_URL}/contacts`);
       const result = await response.json();
       if (result.success) {
         setContacts(result.data);
@@ -45,8 +47,8 @@ function App() {
     try {
       const isEditing = editingContact !== null;
       const url = isEditing 
-        ? `http://localhost:5000/api/contacts/${editingContact._id}`
-        : 'http://localhost:5000/api/contacts';
+        ? `${API_URL}/contacts/${editingContact._id}`
+        : `${API_URL}/contacts`;
       
       const response = await fetch(url, {
         method: isEditing ? 'PUT' : 'POST',
@@ -82,7 +84,7 @@ function App() {
 
   const handleDeleteContact = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/contacts/${id}`, {
+      const response = await fetch(`${API_URL}/contacts/${id}`, {
         method: 'DELETE',
       });
 
@@ -112,7 +114,7 @@ function App() {
 
   const handleToggleFavorite = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/contacts/${id}/favorite`, {
+      const response = await fetch(`${API_URL}/contacts/${id}/favorite`, {
         method: 'PATCH',
       });
 
